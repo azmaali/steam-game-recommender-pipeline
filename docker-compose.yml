@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  airflow:
+    build: .
+    container_name: airflow
+    restart: always
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./scripts:/opt/airflow/scripts
+      - ./utils:/opt/airflow/utils
+      - airflow_logs:/opt/airflow/logs
+    ports:
+      - "8080:8080"
+    entrypoint: /bin/bash -c "/opt/airflow/startup.sh"
+
+volumes:
+  airflow_logs:
